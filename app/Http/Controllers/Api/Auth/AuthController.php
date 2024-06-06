@@ -13,6 +13,7 @@ class AuthController extends Controller
 {
     public function signup(SignupRequest $request)
     {
+        
         User::create($request->all());
         
         return response()->json([
@@ -40,4 +41,21 @@ class AuthController extends Controller
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
+
+    public function logout(Request $request)
+{
+    // if (! $request->user()) {
+    //     return response()->json([
+    //         'message' => ['No user is currently logged in'],
+    //         'status' => Response::HTTP_UNAUTHORIZED,
+    //     ], Response::HTTP_UNAUTHORIZED);
+    // }
+    
+    $request->user()->token()->revoke();
+
+    return response()->json([
+        'message' => ['Successfully logged out'],
+        'status' => Response::HTTP_OK,
+    ], Response::HTTP_OK);
+}
 }
